@@ -10,6 +10,16 @@ public class Fornecedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String nome;
     private String contato;
+    private String endereco;
+
+    public void cadastrar() {
+
+    }
+
+    public void listar() {
+
+    }
 }

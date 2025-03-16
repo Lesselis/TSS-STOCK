@@ -10,6 +10,19 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String nome;
+
+    public void cadastrar() {
+
+    }
+
+    public void listar() {
+
+    }
+
+    public void filtrarPorNome() {
+
+    }
 
 }
