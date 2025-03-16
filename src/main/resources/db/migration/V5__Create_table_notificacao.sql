@@ -1,0 +1,6 @@
+CREATE TABLE notificacao (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    mensagem TEXT,
+    status VARCHAR(50),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

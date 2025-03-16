@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/produtos")
@@ -14,23 +15,33 @@ public class ProdutoController {
     @Autowired
     private ProdutoService produtoService;
 
-    @PostMapping
-    public Produto criarProduto(@RequestBody Produto produto) {
-        return produtoService.salvarProduto(produto);
+    @PostMapping("/cadastrar")
+    public Produto cadastrar(@RequestBody Produto produto) {
+        return produtoService.cadastrar(produto);
+    }
+
+    @PutMapping("/editar/{id}")
+    public Produto editar(@PathVariable Long id, @RequestBody Produto produto) {
+        return produtoService.editar(id, produto);
+    }
+
+    @DeleteMapping("/excluir/{id}")
+    public void excluir(@PathVariable Long id) {
+        produtoService.excluir(id);
     }
 
     @GetMapping
-    public List<Produto> obterProdutos() {
-        return produtoService.obterProdutos();
+    public List<Produto> listar() {
+        return produtoService.listar();
     }
 
     @GetMapping("/{id}")
-    public Produto obterProdutoPorId(@PathVariable Long id) {
-        return produtoService.obterProdutoPorId(id);
+    public Optional<Produto> pesquisar(@PathVariable Long id) {
+        return produtoService.pesquisar(id);
     }
 
-    @DeleteMapping("/{id}")
-    public void deletarProduto(@PathVariable Long id) {
-        produtoService.deletarProduto(id);
+    @PutMapping("/atualizarEstoque/{id}")
+    public Produto atualizarEstoque(@PathVariable Long id, @RequestParam int quantidade) {
+        return produtoService.atualizarEstoque(id, quantidade);
     }
 }
