@@ -19,17 +19,13 @@ public class UsuarioService {
                 .stream()
                 .filter(usuario -> usuario.getEmail().equals(email) && usuario.getSenha().equals(senha))
                 .findFirst();
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            usuario.login();
-            return usuarioRepository.save(usuario);
-        }
-        return null;
+        return usuarioOpt.orElse(null); // Retorna null se não encontrar
     }
 
     public Usuario cadastrar(Usuario usuario) {
-        usuario.validarEmail();
-        usuario.validarSenha();
+        if (!validarEmail(usuario.getEmail()) || !validarSenha(usuario.getSenha())) {
+            throw new IllegalArgumentException("Email ou senha inválidos");
+        }
         return usuarioRepository.save(usuario);
     }
 
@@ -46,36 +42,6 @@ public class UsuarioService {
         return null;
     }
 
-    public Usuario gerenciarAcesso(Long id) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            usuario.gerenciarAcesso();
-            return usuarioRepository.save(usuario);
-        }
-        return null;
-    }
-
-    public Usuario validarEmail(Long id) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            usuario.validarEmail();
-            return usuarioRepository.save(usuario);
-        }
-        return null;
-    }
-
-    public Usuario validarSenha(Long id) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            usuario.validarSenha();
-            return usuarioRepository.save(usuario);
-        }
-        return null;
-    }
-
     public void excluir(Long id) {
         usuarioRepository.deleteById(id);
     }
@@ -86,5 +52,14 @@ public class UsuarioService {
 
     public Optional<Usuario> pesquisar(Long id) {
         return usuarioRepository.findById(id);
+    }
+
+    private boolean validarEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return email.matches(emailRegex);
+    }
+
+    private boolean validarSenha(String senha) {
+        return senha != null && senha.length() >= 6;
     }
 }

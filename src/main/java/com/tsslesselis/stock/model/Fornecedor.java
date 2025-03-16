@@ -15,11 +15,4 @@ public class Fornecedor {
     private String contato;
     private String endereco;
 
-    public void cadastrar() {
-
-    }
-
-    public void listar() {
-
-    }
 }

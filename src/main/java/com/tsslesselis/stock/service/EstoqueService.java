@@ -15,55 +15,28 @@ public class EstoqueService {
     @Autowired
     private EstoqueRepository estoqueRepository;
 
-   public Estoque exportarCSV(Long id) {
-       Optional<Estoque> estoqueOpt = estoqueRepository.findById(id);
-       if (estoqueOpt.isPresent()) {
-           Estoque estoque = estoqueOpt.get();
-           estoque.exportarCSV();
-           return estoqueRepository.save(estoque);
-       }
-       return null;
-   }
-
-   public Estoque gerarHistorico(Long id) {
-       Optional<Estoque> estoqueOpt = estoqueRepository.findById(id);
-       if (estoqueOpt.isPresent()) {
-           Estoque estoque = estoqueOpt.get();
-           estoque.gerarHistorico();
-           return estoqueRepository.save(estoque);
-       }
-       return null;
-   }
-
-    public Estoque calcularValorEstoque(Long id) {
-        Optional<Estoque> estoqueOpt = estoqueRepository.findById(id);
-        if (estoqueOpt.isPresent()) {
-            Estoque estoque = estoqueOpt.get();
-            BigDecimal valorTotalEstoque = estoque.calcularValorTotal();
-            return estoqueRepository.save(estoque);
-        }
-        return null;
+    public List<Estoque> listar() {
+        return estoqueRepository.findAll();
     }
 
-   public Estoque atualizarEstoque(Long id) {
-       Optional<Estoque> estoqueOpt = estoqueRepository.findById(id);
-       if (estoqueOpt.isPresent()) {
-           Estoque estoque = estoqueOpt.get();
-           estoque.atualizarEstoque();
-           return estoqueRepository.save(estoque);
-       }
-       return null;
-   }
+    public Optional<Estoque> pesquisar(Long id) {
+        return estoqueRepository.findById(id);
+    }
 
-   public void excluir(Long id) {
-       estoqueRepository.deleteById(id);
-   }
+    public BigDecimal calcularValorEstoque(Long id) {
+        Estoque estoque = estoqueRepository.findById(id).orElse(null);
+        if (estoque != null) {
+            return estoque.getProduto().getPreco()
+                    .multiply(BigDecimal.valueOf(estoque.getProduto().getEstoque()));
+        }
+        return BigDecimal.ZERO;
+    }
 
-   public List<Estoque> listar() {
-       return estoqueRepository.findAll();
-   }
-
-   public Optional<Estoque> pesquisar(Long id) {
-       return estoqueRepository.findById(id);
-   }
+    public void excluir(Long id) {
+        if (estoqueRepository.existsById(id)) {
+            estoqueRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Estoque com ID " + id + " não encontrado.");
+        }
+    }
 }

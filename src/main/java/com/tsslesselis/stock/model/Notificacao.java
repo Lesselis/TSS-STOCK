@@ -14,15 +14,4 @@ public class Notificacao {
     private String mensagem;
     private String status;
 
-    public void entrarNotificacao() {
-        this.status = "ENTROU";
-    }
-
-    public void definirLimites() {
-
-    }
-
-    public void enviarNotificacao() {
-        this.status = "ENVIADA";
-    }
 }

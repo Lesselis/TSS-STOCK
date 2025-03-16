@@ -14,32 +14,27 @@ public class CategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-   public Categoria cadastrar(Categoria categoria) {
-       return categoriaRepository.save(categoria);
-   }
+    public Categoria cadastrar(Categoria categoria) {
+        return categoriaRepository.save(categoria);
+    }
 
-   public List<Categoria> listar() {
-       List<Categoria> categorias = categoriaRepository.findAll();
-       for (Categoria categoria : categorias) {
-           categoria.listar();
-       }
-       return categorias;
-   }
+    public List<Categoria> listar() {
+        return categoriaRepository.findAll();
+    }
 
-   public Optional <Categoria> pesquisar(Long id) {
-         return categoriaRepository.findById(id);
-   }
+    public Optional<Categoria> pesquisar(Long id) {
+        return categoriaRepository.findById(id);
+    }
 
-   public List<Categoria> filtrarPorNome( String nome) {
-       List<Categoria> categorias = categoriaRepository.findAll();
-       categorias.removeIf(categoria -> !categoria.getNome().equals(nome));
-       for (Categoria categoria : categorias) {
-           categoria.filtrarPorNome();
-       }
-       return categorias;
-   }
+    public List<Categoria> filtrarPorNome(String nome) {
+        return categoriaRepository.findByNome(nome);
+    }
 
-   public void excluir(Long id) {
-         categoriaRepository.deleteById(id);
-   }
+    public void excluir(Long id) {
+        if (categoriaRepository.existsById(id)) {
+            categoriaRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Categoria não encontrada.");
+        }
+    }
 }

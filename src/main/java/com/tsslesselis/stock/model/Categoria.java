@@ -13,16 +13,4 @@ public class Categoria {
 
     private String nome;
 
-    public void cadastrar() {
-
-    }
-
-    public void listar() {
-
-    }
-
-    public void filtrarPorNome() {
-
-    }
-
 }

@@ -15,16 +15,11 @@ public class FornecedorService {
     private FornecedorRepository fornecedorRepository;
 
     public Fornecedor cadastrar(Fornecedor fornecedor) {
-        fornecedor.cadastrar();
         return fornecedorRepository.save(fornecedor);
     }
 
     public List<Fornecedor> listar() {
-        List<Fornecedor> fornecedores = fornecedorRepository.findAll();
-        for (Fornecedor fornecedor : fornecedores) {
-            fornecedor.listar();
-        }
-        return fornecedores;
+        return fornecedorRepository.findAll();
     }
 
     public Optional<Fornecedor> pesquisar(Long id) {
@@ -34,5 +29,4 @@ public class FornecedorService {
     public void excluir(Long id) {
         fornecedorRepository.deleteById(id);
     }
-
 }

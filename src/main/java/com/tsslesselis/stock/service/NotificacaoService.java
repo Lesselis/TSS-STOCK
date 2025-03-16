@@ -14,13 +14,7 @@ public class NotificacaoService {
     @Autowired
     private NotificacaoRepository notificacaoRepository;
 
-    public Notificacao entrarNotificacao(Notificacao notificacao) {
-        notificacao.entrarNotificacao();
-        return notificacaoRepository.save(notificacao);
-    }
-
-    public Notificacao definirLimites(Notificacao notificacao) {
-        notificacao.definirLimites();
+    public Notificacao criar(Notificacao notificacao) {
         return notificacaoRepository.save(notificacao);
     }
 
@@ -36,13 +30,8 @@ public class NotificacaoService {
         return notificacaoRepository.findById(id);
     }
 
-    public Notificacao enviarNotificacao(Long id) {
-        Optional<Notificacao> notificacaoOpt = notificacaoRepository.findById(id);
-        if(notificacaoOpt.isPresent()) {
-            Notificacao notificacao = notificacaoOpt.get();
-            notificacao.enviarNotificacao();
-            return notificacaoRepository.save(notificacao);
-        }
-        return null;
+    public void enviarNotificacao(Notificacao notificacao) {
+        notificacao.setStatus("Enviada");
+        notificacaoRepository.save(notificacao);
     }
 }

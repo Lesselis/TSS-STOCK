@@ -14,7 +14,7 @@ public class Produto {
     private String nome;
     private String descricao;
     private BigDecimal preco;
-    private int quantidadeEstoque;
+    private int estoque;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
@@ -24,27 +24,5 @@ public class Produto {
     @JoinColumn(name = "fornecedor_id")
     private Fornecedor fornecedor;
 
-    public void cadastrar() {
 
-    }
-
-    public void editar() {
-
-    }
-
-    public void excluir() {
-
-    }
-
-    public void listar() {
-
-    }
-
-    public void  pesquisar() {
-
-    }
-
-    public void atualizarEstoque() {
-        
-    }
 }
