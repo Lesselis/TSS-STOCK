@@ -4,7 +4,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.tsslesselis.stock")
 public class StockApplication {
 
 	public static void main(String[] args) {
