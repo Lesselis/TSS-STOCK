@@ -45,17 +45,20 @@ public class UsuarioController {
     }
 
     @PostMapping("/gerenciarAcesso/{id}")
-    public Usuario gerenciarAcesso(@PathVariable Long id) {
-        return usuarioService.gerenciarAcesso(id);
+    public Usuario gerenciarAcesso(@PathVariable Long id, @RequestParam String novoNivelAcesso) {
+        usuarioService.gerenciarAcesso(id, novoNivelAcesso);
+        return usuarioService.pesquisar(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    @PostMapping("/validarEmail/{id}")
-    public Usuario validarEmail(@PathVariable Long id) {
-        return usuarioService.validarEmail(id);
+    @PostMapping("/validarEmail")
+    public String validarEmail(@RequestParam String email) {
+        boolean isValid = usuarioService.validarEmail(email);
+        return isValid ? "Email válido" : "Email inválido";
     }
 
-    @PostMapping("/validarSenha/{id}")
-    public Usuario validarSenha(@PathVariable Long id) {
-        return usuarioService.validarSenha(id);
+    @PostMapping("/validarSenha")
+    public String validarSenha(@RequestParam String senha) {
+        boolean isValid = usuarioService.validarSenha(senha);
+        return isValid ? "Senha válida" : "Senha inválida";
     }
 }

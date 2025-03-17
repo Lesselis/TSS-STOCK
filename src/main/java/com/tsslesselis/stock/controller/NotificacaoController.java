@@ -25,21 +25,6 @@ public class NotificacaoController {
         return notificacaoService.definirLimites(notificacao);
     }
 
-    @DeleteMapping("/excluir/{id}")
-    public void excluir(@PathVariable Long id) {
-        notificacaoService.excluir(id);
-    }
-
-    @GetMapping
-    public List<Notificacao> listar() {
-        return notificacaoService.listar();
-    }
-
-    @GetMapping("/{id}")
-    public Optional<Notificacao> pesquisar(@PathVariable Long id) {
-        return notificacaoService.pesquisar(id);
-    }
-
     @PostMapping("/enviar/{id}")
     public Notificacao enviarNotificacao(@PathVariable Long id) {
         return notificacaoService.enviarNotificacao(id);
