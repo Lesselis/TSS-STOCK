@@ -5,33 +5,24 @@ import com.tsslesselis.stock.repository.NotificacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class NotificacaoService {
 
     @Autowired
     private NotificacaoRepository notificacaoRepository;
 
-    public Notificacao criar(Notificacao notificacao) {
+    public Notificacao entrarNotificacao(Notificacao notificacao) {
         return notificacaoRepository.save(notificacao);
     }
 
-    public void excluir(Long id) {
-        notificacaoRepository.deleteById(id);
+    public Notificacao definirLimites(Notificacao notificacao) {
+        return notificacaoRepository.save(notificacao);
     }
 
-    public List<Notificacao> listar() {
-        return notificacaoRepository.findAll();
-    }
-
-    public Optional<Notificacao> pesquisar(Long id) {
-        return notificacaoRepository.findById(id);
-    }
-
-    public void enviarNotificacao(Notificacao notificacao) {
+    public Notificacao enviarNotificacao(Long id) {
+        Notificacao notificacao = notificacaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notificação não encontrada"));
         notificacao.setStatus("Enviada");
-        notificacaoRepository.save(notificacao);
+        return notificacaoRepository.save(notificacao);
     }
 }

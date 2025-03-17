@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EstoqueService {
@@ -15,28 +14,38 @@ public class EstoqueService {
     @Autowired
     private EstoqueRepository estoqueRepository;
 
-    public List<Estoque> listar() {
+    public String exportarCSV(Long id) {
+        Estoque estoque = estoqueRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estoque não encontrado"));
+
+        return String.join(",",
+                String.valueOf(estoque.getId()),
+                estoque.getMovimentacaoTipo(),
+                estoque.getData().toString(),
+                estoque.getProduto().getNome(),
+                String.valueOf(estoque.getProduto().getEstoque())
+        );
+    }
+
+    public List<Estoque> gerarHistorico() {
         return estoqueRepository.findAll();
     }
 
-    public Optional<Estoque> pesquisar(Long id) {
-        return estoqueRepository.findById(id);
-    }
-
     public BigDecimal calcularValorEstoque(Long id) {
-        Estoque estoque = estoqueRepository.findById(id).orElse(null);
-        if (estoque != null) {
-            return estoque.getProduto().getPreco()
-                    .multiply(BigDecimal.valueOf(estoque.getProduto().getEstoque()));
-        }
-        return BigDecimal.ZERO;
+        Estoque estoque = estoqueRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Não foi possível calcular o valor do estoque"));
+
+        return estoque.getProduto().getPreco()
+                .multiply(BigDecimal.valueOf(estoque.getProduto().getEstoque()));
     }
 
-    public void excluir(Long id) {
-        if (estoqueRepository.existsById(id)) {
-            estoqueRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Estoque com ID " + id + " não encontrado.");
-        }
+    public Estoque atualizarEstoque(Long id, Estoque estoqueAtualizado) {
+        Estoque estoque = estoqueRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Não foi possível atualizar o estoque"));
+
+        estoque.setMovimentacaoTipo(estoqueAtualizado.getMovimentacaoTipo());
+        estoque.setData(estoqueAtualizado.getData());
+
+        return estoqueRepository.save(estoque);
     }
 }

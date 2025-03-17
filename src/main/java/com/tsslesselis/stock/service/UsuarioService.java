@@ -53,13 +53,23 @@ public class UsuarioService {
     public Optional<Usuario> pesquisar(Long id) {
         return usuarioRepository.findById(id);
     }
+    public void gerenciarAcesso(Long id, String novoNivelAcesso) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuarioExistente = usuarioOpt.get();
+            usuarioExistente.setNivelAcesso(novoNivelAcesso);
+            usuarioRepository.save(usuarioExistente);
+        } else {
+            throw new RuntimeException("Usuário não encontrado");
+        }
+    }
 
-    private boolean validarEmail(String email) {
+    public boolean validarEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
         return email.matches(emailRegex);
     }
 
-    private boolean validarSenha(String senha) {
+    public boolean validarSenha(String senha) {
         return senha != null && senha.length() >= 6;
     }
 }
