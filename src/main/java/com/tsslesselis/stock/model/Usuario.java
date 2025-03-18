@@ -3,9 +3,6 @@ package com.tsslesselis.stock.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-import java.util.Optional;
-
 @Data
 @Entity
 public class Usuario {
@@ -17,6 +14,14 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
-    private String nivelAcesso;
+
+    @Enumerated(EnumType.STRING)
+    private NivelAcesso nivelAcesso;
+
+    public enum NivelAcesso {
+        ADMIN,
+        OPERADOR,
+        GERENTE
+    }
 
 }

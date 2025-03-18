@@ -57,8 +57,12 @@ public class UsuarioService {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
         if (usuarioOpt.isPresent()) {
             Usuario usuarioExistente = usuarioOpt.get();
-            usuarioExistente.setNivelAcesso(novoNivelAcesso);
-            usuarioRepository.save(usuarioExistente);
+            try {
+                Usuario.NivelAcesso.valueOf(novoNivelAcesso);
+                usuarioRepository.save(usuarioExistente);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Nível de acesso inválido" + novoNivelAcesso);
+            }
         } else {
             throw new RuntimeException("Usuário não encontrado");
         }
