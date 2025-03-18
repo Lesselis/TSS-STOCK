@@ -1,0 +1,1 @@
+ALTER TABLE usuario MODIFY COLUMN nivel_acesso VARCHAR(255) NOT NULL;
