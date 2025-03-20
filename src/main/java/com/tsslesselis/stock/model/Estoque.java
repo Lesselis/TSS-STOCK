@@ -15,6 +15,7 @@ public class Estoque {
 
     private String movimentacaoTipo;
     private LocalDateTime data;
+    private int quantidade;
 
     @OneToOne
     @JoinColumn(name = "produto_id")
