@@ -5,12 +5,17 @@ import com.tsslesselis.stock.model.Usuario;
 import com.tsslesselis.stock.model.Usuario.NivelAcesso;
 import com.tsslesselis.stock.repository.ProdutoRepository;
 import com.tsslesselis.stock.repository.UsuarioRepository;
+import com.tsslesselis.stock.repository.CategoriaRepository;
+import com.tsslesselis.stock.repository.FornecedorRepository;
+import com.tsslesselis.stock.repository.EstoqueRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 public class ProdutoService {
@@ -24,12 +29,29 @@ public class ProdutoService {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
+
+    @Autowired
+    private EstoqueRepository EstoqueRepository;
+
     private static final int LIMIT_MINIMO_ESTOQUE = 10;
 
     private static final String ASSUNTO_EMAIL = "Alerta de estoque baixo";
     private static final String MENSAGEM_EMAIL = "O produto %s está com estoque baixo: %d unidades";
 
     public Produto cadastrar(Produto produto) {
+        if (produto.getCategoria() == null || Objects.isNull(produto.getCategoria().getId()) ||
+                !categoriaRepository.existsById(produto.getCategoria().getId())) {
+            throw new RuntimeException("Categoria não encontrada.");
+        }
+        if (produto.getFornecedor() == null || Objects.isNull(produto.getFornecedor().getId()) ||
+                !fornecedorRepository.existsById(produto.getFornecedor().getId())) {
+            throw new RuntimeException("Fornecedor não encontrado.");
+        }
         return produtoRepository.save(produto);
     }
 
@@ -46,10 +68,12 @@ public class ProdutoService {
         }).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
     }
 
+    @Transactional
     public void excluir(Long id) {
         if (!produtoRepository.existsById(id)) {
             throw new RuntimeException("Produto não encontrado");
         }
+        EstoqueRepository.deleteByProdutoId(id);
         produtoRepository.deleteById(id);
     }
 

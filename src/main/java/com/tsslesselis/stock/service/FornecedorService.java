@@ -27,6 +27,10 @@ public class FornecedorService {
     }
 
     public void excluir(Long id) {
-        fornecedorRepository.deleteById(id);
+        if (fornecedorRepository.existsById(id)) {
+            fornecedorRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Fornecedor não encontrado.");
+        }
     }
 }
