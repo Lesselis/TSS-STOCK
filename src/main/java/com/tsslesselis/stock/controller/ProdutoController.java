@@ -41,7 +41,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/atualizarEstoque/{id}")
-    public Produto atualizarEstoque(@PathVariable Long id, @RequestParam int quantidade) {
-        return produtoService.atualizarEstoque(id, quantidade);
+    public Produto atualizarEstoque(@PathVariable Long id, @RequestParam int novaQuantidade) {
+        return produtoService.atualizarEstoque(id, novaQuantidade);
     }
 }

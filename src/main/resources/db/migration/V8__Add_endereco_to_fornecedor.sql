@@ -1,0 +1,2 @@
+ALTER TABLE fornecedor
+ADD COLUMN endereco VARCHAR(255);

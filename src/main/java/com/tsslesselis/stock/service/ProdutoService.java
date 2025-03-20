@@ -1,18 +1,33 @@
 package com.tsslesselis.stock.service;
 
 import com.tsslesselis.stock.model.Produto;
+import com.tsslesselis.stock.model.Usuario;
+import com.tsslesselis.stock.model.Usuario.NivelAcesso;
 import com.tsslesselis.stock.repository.ProdutoRepository;
+import com.tsslesselis.stock.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    EmailService emailService;
+
+    private static final int LIMIT_MINIMO_ESTOQUE = 10;
+
+    private static final String ASSUNTO_EMAIL = "Alerta de estoque baixo";
+    private static final String MENSAGEM_EMAIL = "O produto %s está com estoque baixo: %d unidades";
 
     public Produto cadastrar(Produto produto) {
         return produtoRepository.save(produto);
@@ -46,10 +61,29 @@ public class ProdutoService {
         return produtoRepository.findById(id);
     }
 
-    public Produto atualizarEstoque(Long id, int quantidade) {
+    public Produto atualizarEstoque(Long id, int novaQuantidade) {
         return produtoRepository.findById(id).map(produto -> {
-            produto.setEstoque(quantidade);
+            produto.setEstoque(novaQuantidade);
+
+            if (produto.getEstoque() < LIMIT_MINIMO_ESTOQUE) {
+                enviarEmailGerentes(produto);
+            }
             return produtoRepository.save(produto);
         }).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+    }
+
+    private void enviarEmailGerentes(Produto produto) {
+        List<Usuario> gerentes = usuarioRepository.findAll().stream()
+                .filter(usuario -> usuario.getNivelAcesso() == NivelAcesso.GERENTE)
+                .collect(Collectors.toList());
+
+        List<String> emailsGerentes = gerentes.stream()
+                .map(Usuario::getEmail)
+                .collect(Collectors.toList());
+
+        if (!emailsGerentes.isEmpty()) {
+            String mensagem = String.format(MENSAGEM_EMAIL, produto.getNome(), produto.getEstoque());
+            emailService.enviarEmail(emailsGerentes, ASSUNTO_EMAIL, mensagem);
+        }
     }
 }
