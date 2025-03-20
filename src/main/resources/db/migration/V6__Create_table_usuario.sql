@@ -3,5 +3,5 @@ CREATE TABLE usuario (
     nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
-    nivel_acesso INT NOT NULL
+    nivel_acesso VARCHAR(255) NOT NULL
 );
